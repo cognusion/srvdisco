@@ -54,6 +54,31 @@ func DiscoverAddrs(domain, service string) (addresses []string, err error) {
 	return
 }
 
+// DiscoverAddrsPorts does a DNS SRV lookup on the specified domain,
+// for the specified service, and returns a string array of
+// addresses/names and ports to use
+func DiscoverAddrsPorts(domain, service string) (addresses []string, err error) {
+
+	errorChan := make(chan error)
+	discoChan := make(chan url.URL)
+
+	go DiscoverChan(domain, service, "http", discoChan, errorChan)
+
+	for {
+		select {
+		case err = <-errorChan:
+			if err.Error() == "Complete" {
+				err = nil
+			}
+			return
+		case u := <-discoChan:
+			addresses = append(addresses, u.Host)
+		}
+	}
+
+	return
+}
+
 // DiscoverChan does a DNS SRV lookup on the specified domain,
 // for the specified service, and streams url.URLs to use via discoChan,
 // and errors over errorChan, closing both when done. If errorChan
