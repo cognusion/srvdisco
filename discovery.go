@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net"
 	"net/url"
+	"strings"
 )
 
 // Discover does a DNS SRV lookup on the specified domain,
@@ -95,9 +96,12 @@ func DiscoverChan(domain, service, scheme string, discoChan chan url.URL, errorC
 	}
 
 	for _, srv := range addrs {
+		host := srv.Target
+		host = strings.TrimSuffix(host, ".")
+
 		u := url.URL{
 			Scheme: scheme,
-			Host:   net.JoinHostPort(srv.Target, fmt.Sprintf("%d", srv.Port)),
+			Host:   net.JoinHostPort(host, fmt.Sprintf("%d", srv.Port)),
 		}
 		discoChan <- u
 	}
