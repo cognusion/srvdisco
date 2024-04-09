@@ -27,8 +27,6 @@ func Discover(domain, service, scheme string) (urls []string, err error) {
 			urls = append(urls, u.String())
 		}
 	}
-
-	return
 }
 
 // DiscoverAddrs does a DNS SRV lookup on the specified domain,
@@ -51,8 +49,6 @@ func DiscoverAddrs(domain, service string) (addresses []string, err error) {
 			addresses = append(addresses, u.Hostname())
 		}
 	}
-
-	return
 }
 
 // DiscoverAddrsPorts does a DNS SRV lookup on the specified domain,
@@ -76,8 +72,6 @@ func DiscoverAddrsPorts(domain, service string) (addresses []string, err error) 
 			addresses = append(addresses, u.Host)
 		}
 	}
-
-	return
 }
 
 // DiscoverChan does a DNS SRV lookup on the specified domain,
